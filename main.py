@@ -4,11 +4,10 @@ import discord
 from discord.ext import commands
 
 import random
-# from dotenv import load_dotenv
-# load_dotenv()
+from dotenv import load_dotenv
+load_dotenv()
 
-tok = 'MTAwNjIyODY5OTI1MjgwNTY3Mg.G3DexK.I0Wlzqo5WvHSmCaqDq_uRhfHmEMmZtdwYd-BqA'
-TOKEN = tok #'DISCORD_TOKEN'
+TOKEN = os.getenv('DISCORD_TOKEN')
 
 client = discord.Client()
 client = commands.Bot(command_prefix='<=3')
@@ -21,7 +20,7 @@ data = my_file.read()
 # replacing end splitting the text 
 # when newline ('\n') is seen.
 truth_list = data.split('\n')
-print(truth_list)
+
 @client.event
 async def on_ready():
     print(f'{client.user} has connected to Discord!')
