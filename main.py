@@ -7,7 +7,7 @@ import random
 from dotenv import load_dotenv
 load_dotenv()
 
-TOKEN = os.getenv('DISCORD_TOKEN')
+TOKEN = os.getenv('DISCORD_TOKEN') # Create a .env containing and setting your discord token. DISCORD_TOKEN = token
 
 client = discord.Client()
 client = commands.Bot(command_prefix='<=3')
