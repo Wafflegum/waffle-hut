@@ -4,6 +4,7 @@ import discord
 from discord.ext import commands
 
 import random
+import dotenv
 from dotenv import load_dotenv
 load_dotenv()
 
