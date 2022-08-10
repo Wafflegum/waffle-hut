@@ -28,13 +28,25 @@ async def on_ready():
 
 @client.command()
 async def ping(ctx):
-    await ctx.send('titi')
+    await ctx.respond('titi')
 
 @client.command()
 async def truth(ctx):
     question = random.choice(truth_list)
     embed = discord.Embed(title="You picked truth!", description=str(question), colour=0xE5E242)
     embed.set_author(name=ctx.author.name, icon_url=ctx.author.avatar_url)
+    await ctx.respond(embed=embed)
+
+@client.slash_command()
+async def truth(ctx):
+    question = random.choice(truth_list)
+    embed = discord.Embed(title="You picked truth!", description=str(question), colour=0xE5E242)
+    embed.set_author(name=ctx.author.name, icon_url=ctx.author.avatar_url)
+    await ctx.respond(embed=embed)
+
+@client.command()
+async def help(ctx):
+    embed = discord.Embed()
     await ctx.send(embed=embed)
 
 client.run(TOKEN)
