@@ -4,7 +4,6 @@ import lightbulb
 
 import json
 
-
 plugin = lightbulb.Plugin('afk')
 
 @plugin.command
@@ -12,11 +11,19 @@ plugin = lightbulb.Plugin('afk')
 @lightbulb.command('afk', 'afk ka')
 @lightbulb.implements(lightbulb.SlashCommand)
 async def afk(ctx: lightbulb.SlashContext) -> None:
-    if str(ctx.member.display_name).startswith("[AFK]") == False:
+    with open("./extensions/afk.json") as f:
+        data = json.load(f)
+    
+    if data[str(ctx.member.guild_id)][0]["afk role"] not in str(ctx.member.role_ids):
         if(ctx.options.baket == None):
-            await ctx.respond(f"{ctx.author.mention} is now afk")
+            embed = hikari.Embed(title=f"{ctx.member.display_name} is now afk")
+            embed.set_footer("/unafk to afk or just chat anything.")
+            await ctx.respond(embed)
         else:
-            await ctx.respond(f"{ctx.author.mention} is now afk because {ctx.options.baket}")
+            embed = hikari.Embed(title=f"{ctx.member.display_name} is now afk because {ctx.options.baket}")
+            embed.set_footer("/unafk to afk or just chat anything.")
+
+            await ctx.respond(embed)
 
         ##create a dictionary to dump in a json file that contains all guild IDs, and afk role ids.
         dic = {
@@ -29,7 +36,6 @@ async def afk(ctx: lightbulb.SlashContext) -> None:
         guild_id = str(ctx.guild_id)
         with open("./extensions/afk.json") as f:
             data = json.load(f)
-
 
         if guild_id in data:
             print(f"{guild_id} already exist in database")
@@ -63,15 +69,50 @@ async def afk(ctx: lightbulb.SlashContext) -> None:
 async def unafk(ctx: lightbulb.SlashContext) -> None:
     with open("./extensions/afk.json") as f:
         data = json.load(f)
-    guild_id = str(ctx.guild_id)
+    
+    if data[str(ctx.member.guild_id)][0]["afk role"] in str(ctx.member.role_ids):
+        guild_id = str(ctx.guild_id)
 
-    if str(ctx.member.display_name).startswith("[AFK]"):
-        await ctx.member.edit(nickname=ctx.member.display_name[6:])
-    await ctx.member.remove_role(data[guild_id][0]["afk role"]) # This will remove AFK role on the member.
+        with open("./extensions/afk.json") as f:
+            data = json.load(f)
+        if str(ctx.member.display_name).startswith("[AFK]"): # Checks if the user has [AFK] before of it's nickname
+            await ctx.member.edit(nickname=ctx.member.display_name[6:])
 
-    bubu = ['Dapat di ka na bumalik', 'Nayswan', 'Bonak', 'Hayst.', 'Pake ko?', '', '']
-    mura = random.choice(bubu)
-    await ctx.respond(f"{ctx.author.mention} is back. {mura}")
+        await ctx.member.remove_role(data[guild_id][0]["afk role"]) # This will remove AFK role on the member.
+
+        bubu = ['Dapat di ka na bumalik', 'Nayswan', 'Bonak', 'Hayst.', 'Pake ko?', '']
+        mura = random.choice(bubu)
+        embed = hikari.Embed(title=f"{ctx.member.display_name} is back. {mura}")
+        embed.set_footer("/AFK to afk again")
+        await ctx.respond(embed)
+    else:
+        embed = hikari.Embed(title=f"Di ka afk tanga")
+        embed.set_footer("/afk to afk")
+        await ctx.respond(embed)
+
+    
+@plugin.listener(hikari.GuildMessageCreateEvent)
+async def unafk_activity(event: hikari.GuildMessageCreateEvent) -> None:
+    with open("./extensions/afk.json") as f:
+        data = json.load(f)
+    
+    if data[str(event.member.guild_id)][0]["afk role"] in str(event.member.role_ids):
+        try:
+            if str(event.member.display_name).startswith("[AFK]"):
+                await event.member.edit(nickname=event.member.display_name[6:])
+        except:
+            pass
+        # member_roles = await event.member.fetch_roles()
+        # print(await event.member.fetch_roles())
+        await event.member.remove_role(data[str(event.member.guild_id)][0]["afk role"]) # This will remove AFK role on the member.
+        bubu = ['Dapat di ka na bumalik', 'Nayswan', 'Bonak', 'Hayst.', 'Pake ko?', '']
+        mura = random.choice(bubu)
+        embed = hikari.Embed(title=f"{event.member.display_name} is back. {mura}")
+        embed.set_footer("/unafk to afk or just chat anything.")
+        
+        await event.message.respond(embed)
+        # if data[str(guild.id)][0]["afk role"] == member_roles[0]["id"]:
+        #     print(f"{event.author.display_name} is afk")
 
 def load(bot):
     bot.add_plugin(plugin)

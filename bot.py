@@ -35,9 +35,9 @@ async def truth(ctx: lightbulb.SlashContext) -> None:
     question = random.choice(truth_list)
 
     embed = hikari.Embed(
-        title=f"{ctx.author.username} chose truth!",
-        description=question
+        title=question
     )
+    embed.set_footer("/truth for more")
     embed.set_author(name=ctx.author.username, icon=ctx.author.display_avatar_url)
     await ctx.respond(embed)
 
