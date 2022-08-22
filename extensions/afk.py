@@ -7,7 +7,7 @@ import json
 plugin = lightbulb.Plugin('afk')
 
 @plugin.command
-@lightbulb.option("baket", "bat ka mag eAFK?", required=False)
+@lightbulb.option("reason", "why", required=False)
 @lightbulb.command('afk', 'afk ka')
 @lightbulb.implements(lightbulb.SlashCommand)
 async def afk(ctx: lightbulb.SlashContext) -> None:
@@ -64,7 +64,7 @@ async def afk(ctx: lightbulb.SlashContext) -> None:
             pass
 
 @plugin.command
-@lightbulb.command('unafk', 'di ka na afk')
+@lightbulb.command('unafk', 'Remove afk status.')
 @lightbulb.implements(lightbulb.SlashCommand)
 async def unafk(ctx: lightbulb.SlashContext) -> None:
     with open("./extensions/afk.json") as f:
@@ -108,7 +108,7 @@ async def unafk_activity(event: hikari.GuildMessageCreateEvent) -> None:
         bubu = ['Dapat di ka na bumalik', 'Nayswan', 'Bonak', 'Hayst.', 'Pake ko?', '']
         mura = random.choice(bubu)
         embed = hikari.Embed(title=f"{event.member.display_name} is back. {mura}")
-        embed.set_footer("/unafk to afk or just chat anything.")
+        embed.set_footer("/unafk to remove afk status or just chat anything.")
         
         await event.message.respond(embed)
         # if data[str(guild.id)][0]["afk role"] == member_roles[0]["id"]:

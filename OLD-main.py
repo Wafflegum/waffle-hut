@@ -1,3 +1,9 @@
+# This file is based on discord.py. I abandoned this one to use hikari, as I've read online that it's the latest and 'better' than discord.py
+# After using both, I think this one is much more readable and cleaner. I retract what I've said on the github updates hahahahha
+# Hikari documentation and the community is really scarce. Fak
+
+## NOTE - If you are gonna use this, ignore requirements.txt and install discord.py 2.0. Requirements.txt is based on hikari.
+
 import os
 
 import discord

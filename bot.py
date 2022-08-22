@@ -41,4 +41,15 @@ async def truth(ctx: lightbulb.SlashContext) -> None:
     embed.set_author(name=ctx.author.username, icon=ctx.author.display_avatar_url)
     await ctx.respond(embed)
 
+@bot.command
+@lightbulb.option('msg', "your message")
+@lightbulb.command('embed', 'embed a message')
+@lightbulb.implements(lightbulb.SlashCommand)
+async def embed(ctx: lightbulb.SlashContext) -> None:
+
+    
+    em = hikari.Embed(title=str(ctx.options.msg))
+    await ctx.respond(em)
+
+
 bot.run()
