@@ -47,7 +47,6 @@ async def truth(ctx: lightbulb.SlashContext) -> None:
 @lightbulb.implements(lightbulb.SlashCommand)
 async def embed(ctx: lightbulb.SlashContext) -> None:
 
-    
     em = hikari.Embed(title=str(ctx.options.msg))
     await ctx.respond(em)
 

@@ -14,40 +14,39 @@ async def afk(ctx: lightbulb.SlashContext) -> None:
     with open("./extensions/afk.json") as f:
         data = json.load(f)
     
+    ##create a dictionary to dump in a json file that contains all guild IDs, and afk role ids.
+    dic = {
+        str(ctx.guild_id):[
+            {
+                "afk role": ""
+            }
+        ]
+    }
+    guild_id = str(ctx.guild_id)
+    with open("./extensions/afk.json") as f:
+        data = json.load(f)
+
+    if guild_id in data:
+        print(f"{guild_id} already exist in database")
+    else:
+        role = await plugin.bot.rest.create_role( ## create  role >
+            ctx.guild_id,
+            name="AFK")
+        print(f"Created AFK role; role id={role.id}")
+        dic[guild_id][0]["afk role"] = str(role.id)## <
+
+        data.update(dic)
+
     if data[str(ctx.member.guild_id)][0]["afk role"] not in str(ctx.member.role_ids):
-        if(ctx.options.baket == None):
+        if(ctx.options.reason == None):
             embed = hikari.Embed(title=f"{ctx.member.display_name} is now afk")
-            embed.set_footer("/unafk to afk or just chat anything.")
+            embed.set_footer("/unafk to remove afk status or just chat anything.")
             await ctx.respond(embed)
         else:
-            embed = hikari.Embed(title=f"{ctx.member.display_name} is now afk because {ctx.options.baket}")
-            embed.set_footer("/unafk to afk or just chat anything.")
+            embed = hikari.Embed(title=f"{ctx.member.display_name} is now afk because {ctx.options.reason}")
+            embed.set_footer("/unafk to remove afk status or just chat anything.")
 
             await ctx.respond(embed)
-
-        ##create a dictionary to dump in a json file that contains all guild IDs, and afk role ids.
-        dic = {
-            str(ctx.guild_id):[
-                {
-                    "afk role": ""
-                }
-            ]
-        }
-        guild_id = str(ctx.guild_id)
-        with open("./extensions/afk.json") as f:
-            data = json.load(f)
-
-        if guild_id in data:
-            print(f"{guild_id} already exist in database")
-        else:
-            role = await plugin.bot.rest.create_role( ## create  role >
-                ctx.guild_id,
-                name="AFK")
-            print(f"Created AFK role; role id={role.id}")
-            dic[guild_id][0]["afk role"] = str(role.id)## <
-
-            data.update(dic)
-
 
         with open("./extensions/afk.json", 'w') as f:
             json.dump(data, f, indent=2)
